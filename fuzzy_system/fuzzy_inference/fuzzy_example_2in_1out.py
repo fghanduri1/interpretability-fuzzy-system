@@ -1,30 +1,32 @@
 from fuzzy_system.fuzzy_variable_output import FuzzyOutputVariable
 from fuzzy_system.fuzzy_variable_input import FuzzyInputVariable
+#from fuzzy_system.fuzzy_variable import FuzzyVariable
 from fuzzy_system.fuzzy_system import FuzzySystem
 
-colour = FuzzyInputVariable('Colour', 1, 100)
-colour.add_triangular('Excellent', 1, 2)
-colour.add_triangular('Average', 3, 5)
-colour.add_triangular('Bad', 25, 40)
-colour.add_triangular('ExtraBad', 25, 100)
+colour = FuzzyInputVariable('Colour', 0,1,13)
+colour.add_triangular('Excellent', 0, 0.15, 0.25)
+colour.add_trapezoidal('Average', 0.15, 0.25, 0.5,0.65)
+colour.add_trapezoidal('Bad', 0.5, 0.65, 0.75,0.9)
+colour.add_triangular('ExtraBad', 0.75,0.9,1)
 
-tree = FuzzyInputVariable('Tree', 1, 500,3000)
-tree.add_triangular('Excellent', 1, 14)
-tree.add_trapezoidal('Average', 15, 20)
-tree.add_triangular('Bad', 21, 30)
-tree.add_triangular('ExtraBad', 31, 500,3000)
+tree = FuzzyInputVariable('Tree', 0,1,13)
+tree.add_triangular('Excellent', 0, 0.15, 0.25)
+tree.add_trapezoidal('Average', 0.15, 0.25, 0.5,0.65)
+tree.add_trapezoidal('Bad', 0.5, 0.65, 0.75,0.9)
+tree.add_triangular('ExtraBad', 0.75,0.9,1)  
 
-gini = FuzzyInputVariable('Gini', 0, 1, 1)
-gini.add_triangular('Excellent', 0.45, 0.55)
-gini.add_triangular('Average', 0.35, 0.44, 0.56,0.75)
-gini.add_triangular('Bad', 0.25, 0.34, 0.76,0.85)
-gini.add_triangular('ExtraBad', 0,0.24, 0.86, 1)
 
-inter = FuzzyOutputVariable('Interpretability', 0,10)
-inter.add_triangular('Excellent', 8, 10)
-inter.add_triangular('Average', 6, 7)
-inter.add_triangular('Bad', 3, 5)
-inter.add_triangular('ExtraBad', 0, 2)
+gini = FuzzyInputVariable('Gini', 0, 1,13)
+gini.add_triangular('LBad', 0, 0.3, 0.42)
+gini.add_trapezoidal('Good',0.3,0.42,0.55,0.75)
+gini.add_triangular('RBad', 0.55,0.75,1)
+
+
+inter = FuzzyOutputVariable('Interpretability', 0,1,13)
+inter.add_triangular('Excellent', 0.8,0.9,1)
+inter.add_trapezoidal('Average', 0.6, 0.7, 0.8, 0.9)
+inter.add_trapezoidal('Bad', 0.3, 0.5,0.6,0.7)
+inter.add_triangular('ExtraBad', 0, 0.3, 0.5)
 
 system = FuzzySystem()
 system.add_input_variable(colour)
@@ -34,77 +36,110 @@ system.add_output_variable(inter)
 
 system.add_rule(
 		{ 'Colour':'Excellent',
-			'Tree':'Excellent','Gini':'Excellent'},
+			'Tree':'Excellent','Gini':'Good'},
 		{ 'Interpretability':'Excellent'})
 
 system.add_rule(
 		{ 'Colour':'Average',
-			'Tree':'Excellent','Gini':'Excellent'},
+			'Tree':'Excellent','Gini':'Good'},
 		{ 'Interpretability':'Excellent'})
 
 system.add_rule(
 		{ 'Colour':'Bad',
-			'Tree':'Excellent','Gini':'Excellent'},
+			'Tree':'Excellent','Gini':'Good'},
 		{ 'Interpretability':'Average'})
 
 system.add_rule(
 		{ 'Colour':'ExtraBad',
-			'Tree':'Excellent','Gini':'Excellent'},
+			'Tree':'Excellent','Gini':'Good'},
 		{ 'Interpretability':'Bad'})
 
 system.add_rule(
 		{ 'Colour':'Excellent',
-			'Tree':'Average','Gini':'Excellent'},
+			'Tree':'Average','Gini':'Good'},
 		{ 'Interpretability':'Average'})
 
 system.add_rule(
 		{ 'Colour':'Excellent',
-			'Tree':'Bad','Gini':'Excellent'},
+			'Tree':'Bad','Gini':'Good'},
 		{ 'Interpretability':'Bad'})
 
 system.add_rule(
 		{ 'Colour':'Excellent',
-			'Tree':'ExtraBad','Gini':'Excellent'},
+			'Tree':'ExtraBad','Gini':'Good'},
 		{ 'Interpretability':'ExtraBad'})
 
 system.add_rule(
 		{ 'Colour':'Excellent',
-			'Tree':'Excellent','Gini':'Average'},
+			'Tree':'Excellent','Gini':'Good'},
 		{ 'Interpretability':'Excellent'})
 
 system.add_rule(
 		{ 'Colour':'Excellent',
-			'Tree':'Excellent','Gini':'Bad'},
+			'Tree':'Excellent','Gini':'LBad'},
 		{ 'Interpretability':'Excellent'})
 
 system.add_rule(
 		{ 'Colour':'Excellent',
-			'Tree':'Excellent','Gini':'ExtraBad'},
+			'Tree':'Excellent','Gini':'RBad'},
 		{ 'Interpretability':'Average'})
 
 system.add_rule(
 		{ 'Colour':'ExtraBad',
-			'Tree':'ExtraBad','Gini':'ExtraBad'},
+			'Tree':'ExtraBad','Gini':'RBad'},
 		{ 'Interpretability':'ExtraBad'})
 
 system.add_rule(
 		{ 'Colour':'ExtraBad',
-			'Tree':'ExtraBad','Gini':'ExtraBad'},
+			'Tree':'ExtraBad','Gini':'RBad'},
 		{ 'Interpretability':'ExtraBad'})
 
 system.add_rule(
 		{ 'Colour':'Average',
-			'Tree':'Average','Gini':'Average'},
+			'Tree':'Average','Gini':'Good'},
 		{ 'Interpretability':'Average'})
 
 system.add_rule(
 		{ 'Colour':'Bad',
-			'Tree':'Bad','Gini':'Bad'},
+			'Tree':'Bad','Gini':'LBad'},
 		{ 'Interpretability':'Bad'})
+system.add_rule(
+		{ 'Colour':'Bad',
+			'Tree':'Bad','Gini':'Good'},
+		{ 'Interpretability':'Bad'})
+system.add_rule(
+		{ 'Colour':'Average',
+			'Tree':'Bad','Gini':'Good'},
+		{ 'Interpretability':'Average'})
+system.add_rule(
+		{ 'Colour':'Bad',
+			'Tree':'Average','Gini':'LBad'},
+		{ 'Interpretability':'Bad'})
+
+system.add_rule(
+		{ 'Colour':'Average',
+			'Tree':'Bad','Gini':'LBad'},
+		{ 'Interpretability':'Bad'})
+
+system.add_rule(
+		{ 'Colour':'Average',
+			'Tree':'ExtraBad','Gini':'LBad'},
+		{ 'Interpretability':'Bad'})
+
+system.add_rule(
+		{ 'Colour':'Average',
+			'Tree':'ExtraBad','Gini':'RBad'},
+		{ 'Interpretability':'ExtraBad'})
+system.add_rule(
+		{ 'Colour':'Excellent',
+			'Tree':'Excellent','Gini':'LBad'},
+		{ 'Interpretability':'Excellent'})
+
 
 output = system.evaluate_output({
-				'Colour':5,
-				'Interpretability':7
+				'Colour':0.1,
+				'Gini':0.89,
+				'Tree':0.12
 		})
 
 print(output)
